@@ -4,7 +4,7 @@ import app from "./app.js";
 
 const start = async () => {
   const fastify = Fastify({
-    logger: true,
+    logger: environment.NODE_ENV === "development",
   });
 
   await fastify.register(app);
@@ -16,6 +16,10 @@ const start = async () => {
 
   console.log("Server running");
 };
+
+setInterval(() => {
+  console.log("Server is on");
+}, 1000 * 15);
 
 start().catch((err) => {
   console.error(err);
