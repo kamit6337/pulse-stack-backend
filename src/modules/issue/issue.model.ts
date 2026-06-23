@@ -18,6 +18,7 @@ const issueSchema = new mongoose.Schema(
 
     name: {
       type: String, // TypeError, ReferenceError...
+      required: true,
       trim: true,
     },
 
@@ -56,6 +57,7 @@ const issueSchema = new mongoose.Schema(
 
 issueSchema.index({ projectId: 1, fingerprint: 1 }, { unique: true });
 issueSchema.index({ status: 1, createdAt: -1 });
+issueSchema.index({ fingerprint: 1 });
 
 issueSchema.set("toJSON", {
   transform(doc, ret: any, options) {
@@ -67,6 +69,13 @@ issueSchema.set("toJSON", {
     return ret;
   },
 });
+
+type IssueSchemaType = mongoose.InferSchemaType<typeof issueSchema>;
+
+export type IssueModelType = Omit<
+  IssueSchemaType,
+  "createdAt" | "updatedAt" | "status" | "resolvedAt"
+>;
 
 export const IssueModel = mongoose.model("Issue", issueSchema);
 

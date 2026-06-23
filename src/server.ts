@@ -17,10 +17,6 @@ const start = async () => {
   console.log("Server running");
 };
 
-setInterval(() => {
-  console.log("Server is on");
-}, 1000 * 15);
-
 start().catch((err) => {
   console.error(err);
   process.exit(1);

@@ -1,6 +1,5 @@
 import { FastifyPluginAsync } from "fastify";
 import { createNewIssueController } from "./issue.controller.js";
-import { createIssueSchema } from "./issue.schema.js";
 
 const issueRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get("/", async (request, reply) => {
@@ -9,15 +8,13 @@ const issueRoutes: FastifyPluginAsync = async (fastify) => {
     });
   });
 
-  fastify.post(
-    "/",
-    {
-      schema: {
-        body: createIssueSchema,
-      },
-    },
-    createNewIssueController,
+  fastify.addContentTypeParser(
+    "application/octet-stream",
+    { parseAs: "buffer" },
+    async (_: any, body: any) => body,
   );
+
+  fastify.post("/", createNewIssueController);
 };
 
 export default issueRoutes;

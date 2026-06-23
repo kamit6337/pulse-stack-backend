@@ -76,3 +76,5 @@ export const createIssueSchema = z.object({
     })
     .optional(),
 });
+
+export const createIssueArraySchema = z.array(createIssueSchema);

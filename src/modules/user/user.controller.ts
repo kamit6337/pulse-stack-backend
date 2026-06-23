@@ -12,8 +12,6 @@ export const createUserController = async (
 ): Promise<UserType> => {
   const userAuth = request.auth;
 
-  console.log("userAuth", userAuth);
-
   const { name, email } = request.body;
 
   const user = await createUserDB(name, email);
