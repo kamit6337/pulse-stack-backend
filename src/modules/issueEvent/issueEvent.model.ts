@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const issueEventSchema = new mongoose.Schema(
   {
-    groupId: {
+    issueId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Issue",
       index: true,
@@ -13,6 +13,12 @@ const issueEventSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       index: true,
+    },
+
+    // Error Grouping
+    fingerprint: {
+      type: String,
+      required: true,
     },
 
     environment: {
@@ -118,13 +124,23 @@ const issueEventSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+issueEventSchema.index(
+  {
+    issueId: 1,
+    fingerprint: 1,
+  },
+  {
+    unique: true,
+  },
+);
+
 issueEventSchema.index({
   projectId: 1,
   createdAt: -1,
 });
 
 issueEventSchema.index({
-  groupId: 1,
+  issueId: 1,
   createdAt: -1,
 });
 
@@ -138,15 +154,15 @@ issueEventSchema.index({
   createdAt: -1,
 });
 
-issueEventSchema.set("toJSON", {
-  transform(doc, ret: any, options) {
-    ret.id = ret._id.toString();
+// issueEventSchema.set("toJSON", {
+//   transform(doc, ret: any, options) {
+//     ret.id = ret._id.toString();
 
-    delete ret._id;
-    delete ret.__v;
+//     delete ret._id;
+//     delete ret.__v;
 
-    return ret;
-  },
-});
+//     return ret;
+//   },
+// });
 
 export const IssueEventModel = mongoose.model("IssueEvent", issueEventSchema);

@@ -5,26 +5,31 @@ export type ErrorBucket = {
   lastSeen: number;
 };
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+type CreateIssueEventType = Omit<CreateIssueType, "name" | "message"> & {
+  issueId: string;
+  projectId: string;
+  user: User;
+  fingerprint: string;
+};
+
 export type CreateIssueType = {
   message: string;
   name: string;
+  environment: "development" | "staging" | "production";
   stack?: string;
   code?: string;
-  environment: "development" | "staging" | "production";
   level: "fatal" | "error" | "warning" | "info";
-  route?: string;
-  release?: string;
-  device?: string;
-
   server?: {
     hostname: string;
     region: string;
   };
-
-  browser?: {
-    name: string;
-    version: string;
-  };
+  route?: string;
 
   request?: {
     method: string;
@@ -43,6 +48,13 @@ export type CreateIssueType = {
     cpuUsage: number;
     ip?: string;
   };
+  release?: string;
+
+  browser?: {
+    name: string;
+    version: string;
+  };
+  device?: string;
 
   tags?: Record<string, string>;
 

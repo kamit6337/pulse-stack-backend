@@ -2,50 +2,9 @@ import { ErrorBucket } from "@/types/issue.js";
 import { IssueModel, IssueModelType } from "./issue.model.js";
 import { Types } from "mongoose";
 
-export const createIssueDB = (data: IssueModelType) => {
-  return IssueModel.create({
-    projectId: data.projectId,
-    name: data.name,
-    message: data.message,
-    fingerprint: data.fingerprint,
-    occurrenceCount: data.occurrenceCount,
-    firstSeen: data.firstSeen,
-    lastSeen: data.lastSeen,
-  });
-};
-
-export const findIssueFromFingerPrintDB = (
-  projectId: string,
-  fingerprint: string,
-) => {
-  return IssueModel.exists({
-    projectId,
-    fingerprint,
-  });
-};
-
-export const updateIssueIncCountDB = (
-  projectId: string,
-  fingerprint: string,
-  count: number,
-  lastSeen: number,
-) => {
-  const newDate = new Date(lastSeen);
-
-  return IssueModel.findOneAndUpdate(
-    {
-      projectId,
-      fingerprint,
-    },
-    {
-      $inc: {
-        occurrenceCount: count,
-      },
-      $set: {
-        lastSeen: newDate,
-      },
-    },
-  );
+type ProcessedErrors = {
+  bucket: ErrorBucket;
+  fingerprint: string;
 };
 
 export const createUpdateIssueDB = (data: IssueModelType) => {
@@ -90,26 +49,21 @@ export const createUpdateIssueDB = (data: IssueModelType) => {
 };
 
 export const createUpdateIssueBulkWriteDB = (
-  errData: ErrorBucket[],
+  processedErrors: ProcessedErrors[],
   projectId: string,
-  generateFingerPrint: (
-    projectId: string,
-    name: string,
-    message: string,
-  ) => string,
 ) => {
   const projectObjectId = new Types.ObjectId(projectId);
 
   return IssueModel.bulkWrite(
-    errData.map((err) => {
+    processedErrors.map((processedError) => {
       const {
         error: { name, message },
         count,
         lastSeen,
         firstSeen,
-      } = err;
+      } = processedError.bucket;
 
-      const fingerprint = generateFingerPrint(projectId, name, message);
+      const fingerprint = processedError.fingerprint;
 
       return {
         updateOne: {

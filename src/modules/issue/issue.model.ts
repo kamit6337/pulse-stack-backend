@@ -59,17 +59,6 @@ issueSchema.index({ projectId: 1, fingerprint: 1 }, { unique: true });
 issueSchema.index({ status: 1, createdAt: -1 });
 issueSchema.index({ fingerprint: 1 });
 
-issueSchema.set("toJSON", {
-  transform(doc, ret: any, options) {
-    ret.id = ret._id.toString();
-
-    delete ret._id;
-    delete ret.__v;
-
-    return ret;
-  },
-});
-
 type IssueSchemaType = mongoose.InferSchemaType<typeof issueSchema>;
 
 export type IssueModelType = Omit<
