@@ -106,8 +106,8 @@ const issueEventSchema = new mongoose.Schema(
 
     // Tags
     tags: {
-      type: Map,
-      of: String,
+      type: mongoose.Schema.Types.Mixed,
+      required: false,
     },
 
     // Extra Data
@@ -169,6 +169,11 @@ issueEventSchema.index({
 export type IssueEventType = Omit<
   InferSchemaType<typeof issueEventSchema>,
   "createdAt" | "updatedAt"
+>;
+
+export type CreateIssueEventType = Omit<
+  InferSchemaType<typeof issueEventSchema>,
+  "createdAt" | "updatedAt" | "issueId" | "projectId" | "fingerprint"
 >;
 
 export const IssueEventModel = mongoose.model("IssueEvent", issueEventSchema);

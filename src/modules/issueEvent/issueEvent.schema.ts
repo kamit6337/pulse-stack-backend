@@ -1,54 +1,72 @@
 import z from "zod";
 
-export const createNewIssueEventSchema = z.object({
+export const createIssueEventSchema = z.object({
+  stack: z.string().optional(),
+
+  code: z.string().optional(),
+
   environment: z
     .enum(["development", "staging", "production"])
     .default("production"),
-  stack: z.string(),
-  code: z.string(),
+
   level: z.enum(["fatal", "error", "warning", "info"]).default("error"),
-  server: {
-    hostname: z.string(),
-    region: z.string(),
-  },
-  route: z.string(),
-  request: {
-    method: z.string(),
-    url: z.string(),
-    path: z.string(),
-    query: z.string(),
-    body: z.string(),
-    headers: z.string(),
-  },
-  runtime: {
-    nodeVersion: z.string(),
-    platform: z.string(),
-    memoryUsage: z.coerce.number(),
-    cpuUsage: z.coerce.number(),
-    ip: z.string(),
-  },
 
-  //     // Release Tracking
-  release: z.string(),
+  route: z.string().optional(),
 
-  //     // Browser
-  browser: {
+  release: z.string().optional(),
+
+  device: z.string().optional(),
+
+  server: z
+    .object({
+      hostname: z.string(),
+      region: z.string(),
+    })
+    .optional(),
+
+  browser: z
+    .object({
+      name: z.string(),
+      version: z.string(),
+    })
+    .optional(),
+
+  request: z
+    .object({
+      method: z.string(),
+      url: z.string(),
+      path: z.string(),
+
+      query: z.unknown().optional(),
+      body: z.unknown().optional(),
+      headers: z.unknown().optional(),
+    })
+    .optional(),
+
+  runtime: z
+    .object({
+      nodeVersion: z.string(),
+      platform: z.string(),
+      memoryUsage: z.number(),
+      cpuUsage: z.number(),
+      ip: z.string(),
+    })
+    .optional(),
+
+  // user: z
+  //   .object({
+  //     id: z.string().optional(),
+  //     name: z.string().optional(),
+  //     email: z.string().optional(),
+  //   })
+  //   .optional(),
+
+  tags: z.record(z.string(), z.string()).optional(),
+
+  metadata: z.unknown().optional(),
+
+  sdk: z.object({
     name: z.string(),
     version: z.string(),
-  },
-
-  //     // Device
-  device: z.string(),
-
-  //     // Tags
-  tags: z.array(z.string()),
-
-  //     // Extra Data
-  metadata: z.string(),
-
-  //     // SDK info
-  sdk: {
-    name: z.string(),
-    version: z.string(),
-  },
+  }),
 });

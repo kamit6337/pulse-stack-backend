@@ -1,5 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 import { createNewIssueController } from "./issue.controller.js";
+import decompressBody from "./decompressBody.js";
+import { createIssueArraySchema } from "./issue.schema.js";
 
 const issueRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get("/", async (request, reply) => {
@@ -14,7 +16,15 @@ const issueRoutes: FastifyPluginAsync = async (fastify) => {
     async (_: any, body: any) => body,
   );
 
-  fastify.post("/", createNewIssueController);
+  fastify.post(
+    "/",
+    {
+      preValidation: async (request) => {
+        request.errorBuckets = decompressBody(request, createIssueArraySchema);
+      },
+    },
+    createNewIssueController,
+  );
 };
 
 export default issueRoutes;

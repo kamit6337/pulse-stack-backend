@@ -9,15 +9,15 @@ const issueSchema = new mongoose.Schema(
       index: true,
     },
 
-    // Error Details
-    message: {
-      type: String,
+    name: {
+      type: String, // TypeError, ReferenceError...
       required: true,
       trim: true,
     },
 
-    name: {
-      type: String, // TypeError, ReferenceError...
+    // Error Details
+    message: {
+      type: String,
       required: true,
       trim: true,
     },
@@ -64,6 +64,16 @@ type IssueSchemaType = mongoose.InferSchemaType<typeof issueSchema>;
 export type IssueModelType = Omit<
   IssueSchemaType,
   "createdAt" | "updatedAt" | "status" | "resolvedAt"
+>;
+
+export type CreateIssueType = Omit<
+  IssueSchemaType,
+  | "createdAt"
+  | "updatedAt"
+  | "status"
+  | "resolvedAt"
+  | "projectId"
+  | "fingerprint"
 >;
 
 export const IssueModel = mongoose.model("Issue", issueSchema);

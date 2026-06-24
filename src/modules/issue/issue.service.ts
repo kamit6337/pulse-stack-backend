@@ -1,23 +1,21 @@
-import { ErrorBucket } from "@/types/issue.js";
 import { SDK_ENCRYPTION_OBJECT } from "@/types/sdk.js";
 import generateFingerPrint from "@/utils/generateFingerPrint.js";
-import { createUpdateIssueBulkWriteDB } from "./issue.db.js";
+import { createUpdateIssueBulkWriteDB, ProcessedErrors } from "./issue.db.js";
 import { issueEventBulkInserted } from "../issueEvent/issueEvent.db.js";
 import mongoose, { Types } from "mongoose";
 import { IssueEventType } from "../issueEvent/issueEvent.model.js";
+import { CreateIssueArrayType } from "./issue.types.js";
 
 export const createNewIssue = async (
   sdk: SDK_ENCRYPTION_OBJECT,
-  errData: ErrorBucket[],
+  errData: CreateIssueArrayType,
 ) => {
-  const processedErrors = errData.map((err) => ({
-    bucket: err,
-    fingerprint: generateFingerPrint(
-      sdk.projectId,
-      err.error.name,
-      err.error.message,
-    ),
-  }));
+  const processedErrors = errData.map((err) => {
+    return {
+      bucket: err,
+      fingerprint: generateFingerPrint(sdk.projectId, err.name, err.message),
+    };
+  });
 
   const issueCreatedUpdated = await createUpdateIssueBulkWriteDB(
     processedErrors,
@@ -26,18 +24,9 @@ export const createNewIssue = async (
 
   console.log("RESULTS", issueCreatedUpdated);
 
-  // BulkWriteResult {
-  //   insertedCount: 0,
-  //   matchedCount: 0,
-  //   modifiedCount: 0,
-  //   deletedCount: 0,
-  //   upsertedCount: 2,
   //   upsertedIds: {
   //     '0': new ObjectId('6a3a6b0485f7bbfa043bccd1'),
   //     '1': new ObjectId('6a3a6b0485f7bbfa043bccd2')
-  //   },
-  //   insertedIds: {}
-  // }
 
   const issueEventArr: IssueEventType[] = [];
 
@@ -53,18 +42,30 @@ export const createNewIssue = async (
 
     if (!fingerprint && !bucket) continue;
 
-    const { name, message, ...eventData } = bucket.error;
+    const { error } = bucket;
 
     const obj: IssueEventType = {
       issueId: issueId as unknown as Types.ObjectId,
       projectId: sdk.projectId as unknown as Types.ObjectId,
+      fingerprint,
+      environment: error.environment,
+      code: error.code,
+      level: error.level,
+      server: error.server,
+      route: error.route,
+      request: error.request,
       user: {
         id: sdk.id,
         name: sdk.name,
         email: sdk.email,
       },
-      fingerprint,
-      ...eventData,
+      runtime: error.runtime,
+      release: error.release,
+      browser: error.browser,
+      device: error.device,
+      tags: error.tags,
+      metadata: error.metadata,
+      sdk: error.sdk,
     };
 
     issueEventArr.push(obj);

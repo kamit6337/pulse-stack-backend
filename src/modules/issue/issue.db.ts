@@ -1,9 +1,8 @@
-import { ErrorBucket } from "@/types/issue.js";
-import { IssueModel, IssueModelType } from "./issue.model.js";
+import { CreateIssueType, IssueModel, IssueModelType } from "./issue.model.js";
 import { Types } from "mongoose";
 
-type ProcessedErrors = {
-  bucket: ErrorBucket;
+export type ProcessedErrors = {
+  bucket: CreateIssueType;
   fingerprint: string;
 };
 
@@ -56,12 +55,8 @@ export const createUpdateIssueBulkWriteDB = (
 
   return IssueModel.bulkWrite(
     processedErrors.map((processedError) => {
-      const {
-        error: { name, message },
-        count,
-        lastSeen,
-        firstSeen,
-      } = processedError.bucket;
+      const { name, message, occurrenceCount, lastSeen, firstSeen } =
+        processedError.bucket;
 
       const fingerprint = processedError.fingerprint;
 
@@ -82,7 +77,7 @@ export const createUpdateIssueBulkWriteDB = (
             },
 
             $inc: {
-              occurrenceCount: count,
+              occurrenceCount,
             },
 
             $set: {

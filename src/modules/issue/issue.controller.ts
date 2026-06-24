@@ -1,6 +1,4 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import decompressBody from "./decompressBody.js";
-import { ErrorBucket } from "@/types/issue.js";
 import { createNewIssue } from "./issue.service.js";
 
 export const createNewIssueController = async (
@@ -8,8 +6,7 @@ export const createNewIssueController = async (
   reply: FastifyReply,
 ) => {
   const sdk = request.sdk;
-
-  const errData = decompressBody<ErrorBucket>(request);
+  const errData = request.errorBuckets;
 
   await createNewIssue(sdk, errData);
 
