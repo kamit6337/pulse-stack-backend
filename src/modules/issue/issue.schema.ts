@@ -5,8 +5,8 @@ export const createIssueSchema = z.object({
   name: z.string(),
   message: z.string(),
   occurrenceCount: z.coerce.number(),
-  firstSeen: z.date(),
-  lastSeen: z.date(),
+  firstSeen: z.string(),
+  lastSeen: z.string(),
   error: createIssueEventSchema,
 });
 

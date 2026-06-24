@@ -38,7 +38,7 @@ export const createIssueEventSchema = z.object({
       platform: z.string(),
       memoryUsage: z.number(),
       cpuUsage: z.number(),
-      ip: z.string(),
+      ip: z.string().optional(),
     })
     .optional(),
 

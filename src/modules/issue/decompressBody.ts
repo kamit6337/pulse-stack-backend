@@ -18,6 +18,8 @@ const decompressBody = <T>(
 
   const json = JSON.parse(uncompressed.toString());
 
+  console.log("DECOMPRESSED JSON", json);
+
   return schema.parse(json) as T;
 };
 
