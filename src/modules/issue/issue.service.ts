@@ -12,7 +12,11 @@ export const createNewIssue = async (
 ) => {
   const processedErrors = errData.map((err) => {
     return {
-      bucket: err,
+      bucket: {
+        ...err,
+        firstSeen: new Date(err.firstSeen),
+        lastSeen: new Date(err.lastSeen),
+      },
       fingerprint: generateFingerPrint(sdk.projectId, err.name, err.message),
     };
   });
