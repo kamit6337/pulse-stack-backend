@@ -9,6 +9,12 @@ const issueSchema = new mongoose.Schema(
       index: true,
     },
 
+    // Error Grouping
+    fingerprint: {
+      type: String,
+      required: true,
+    },
+
     name: {
       type: String, // TypeError, ReferenceError...
       required: true,
@@ -20,12 +26,6 @@ const issueSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
-
-    // Error Grouping
-    fingerprint: {
-      type: String,
-      required: true,
     },
 
     occurrenceCount: {

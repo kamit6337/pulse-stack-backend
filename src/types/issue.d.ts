@@ -1,6 +1,10 @@
 import { CreateIssueType } from "@/modules/issue/issue.model.ts";
 import type { CreateIssueEventType } from "@/modules/issueEvent/issueEvent.model.ts";
 
+export type ErrorBucket = CreateIssueType & {
+  error: CreateIssueEventType;
+};
+
 // export type ErrorBucket = {
 //   name: string;
 //   message: string;
@@ -54,7 +58,7 @@ type User = {
 
 //   device?: string;
 
-//   tags?: Record<string, string> | null | undefined;
+//   tags?: Map<string, string> | null | undefined;
 
 //   metadata?: any;
 

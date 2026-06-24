@@ -1,21 +1,15 @@
 import z from "zod";
 
 export const createIssueEventSchema = z.object({
-  stack: z.string().optional(),
-
-  code: z.string().optional(),
-
   environment: z
     .enum(["development", "staging", "production"])
     .default("production"),
 
+  stack: z.string().optional(),
+
+  code: z.string().optional(),
+
   level: z.enum(["fatal", "error", "warning", "info"]).default("error"),
-
-  route: z.string().optional(),
-
-  release: z.string().optional(),
-
-  device: z.string().optional(),
 
   server: z
     .object({
@@ -24,12 +18,7 @@ export const createIssueEventSchema = z.object({
     })
     .optional(),
 
-  browser: z
-    .object({
-      name: z.string(),
-      version: z.string(),
-    })
-    .optional(),
+  route: z.string().optional(),
 
   request: z
     .object({
@@ -53,13 +42,16 @@ export const createIssueEventSchema = z.object({
     })
     .optional(),
 
-  // user: z
-  //   .object({
-  //     id: z.string().optional(),
-  //     name: z.string().optional(),
-  //     email: z.string().optional(),
-  //   })
-  //   .optional(),
+  release: z.string().optional(),
+
+  browser: z
+    .object({
+      name: z.string(),
+      version: z.string(),
+    })
+    .optional(),
+
+  device: z.string().optional(),
 
   tags: z.record(z.string(), z.string()).optional(),
 
