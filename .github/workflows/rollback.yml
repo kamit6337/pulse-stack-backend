@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Docker image tag to deploy (e.g. v2.3.0)"
+        description: "Docker image tag (e.g. 2.3.0 or v2.3.0)"
         required: true
         type: string
 
@@ -19,19 +19,29 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Normalize Version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          VERSION="${VERSION#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Verify Image Exists
         run: |
-          docker manifest inspect kamit6337/pulse-stack:${{ github.event.inputs.version }}
+          docker manifest inspect kamit6337/pulse-stack:${VERSION}
 
       - name: Pull Selected Version
         run: |
-          docker pull kamit6337/pulse-stack:${{ github.event.inputs.version }}
+          docker pull kamit6337/pulse-stack:${VERSION}
 
       - name: Tag as Latest
         run: |
           docker tag \
-            kamit6337/pulse-stack:${{ github.event.inputs.version }} \
+            kamit6337/pulse-stack:${VERSION} \
             kamit6337/pulse-stack:latest
+
+      - name: Remove old latest
+        run: |
+          docker image rm kamit6337/pulse-stack:latest || true
 
       - name: Push Latest
         run: |
@@ -39,4 +49,4 @@ jobs:
 
       - name: Summary
         run: |
-          echo "Rolled back latest to ${{ github.event.inputs.version }}"
+          echo "✅ Successfully rolled back latest to ${VERSION}"
