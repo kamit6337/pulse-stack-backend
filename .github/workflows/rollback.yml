@@ -39,9 +39,8 @@ jobs:
             kamit6337/pulse-stack:${VERSION} \
             kamit6337/pulse-stack:latest
 
-      - name: Remove old latest
-        run: |
-          docker image rm kamit6337/pulse-stack:latest || true
+      - name: List Docker Images
+        run: docker images
 
       - name: Push Latest
         run: |
