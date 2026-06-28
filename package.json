@@ -13,6 +13,7 @@
     "build:ts": "tsc && tsc-alias",
     "watch:ts": "tsc -w",
     "dev": "tsx watch src/server.ts",
+    "dev:doppler": "doppler run -- npm run dev",
     "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/server.js",
     "secret_key": "node generateSecretKey.js",
     "encrypt": "node generateEncryption.js"

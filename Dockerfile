@@ -28,8 +28,18 @@ COPY package*.json ./
 
 RUN npm ci --omit=dev
 
+
+# Install Doppler CLI
+RUN wget -q -t3 \
+'https://packages.doppler.com/public/cli/rsa.8004D9FF50437357.key' \
+-O /etc/apk/keys/cli@doppler-8004D9FF50437357.rsa.pub \
+ && echo 'https://packages.doppler.com/public/cli/alpine/any-version/main' \
+ >> /etc/apk/repositories \
+ && apk add --no-cache doppler
+
+
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 8000
 
-CMD ["node", "dist/server.js"]
+CMD ["doppler","run","--","node", "dist/server.js"]
