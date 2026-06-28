@@ -1,4 +1,7 @@
-import { IssueProjectModel } from "./issueProject.model.js";
+import {
+  CreateIssueProjectType,
+  IssueProjectModel,
+} from "./issueProject.model.js";
 
 export const getIssueProjectDB = (userId: string) => {
   return IssueProjectModel.find({
@@ -6,9 +9,10 @@ export const getIssueProjectDB = (userId: string) => {
   }).sort({ createdAt: -1 });
 };
 
-export const createIssueProjectDB = (userId: string, name: string) => {
+export const createIssueProjectDB = (data: CreateIssueProjectType) => {
   return IssueProjectModel.create({
-    userId,
-    name,
+    userId: data.userId,
+    name: data.name,
+    backendFramework: data.backendFramework,
   });
 };

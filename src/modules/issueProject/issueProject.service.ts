@@ -1,7 +1,11 @@
 import { createIssueProjectDB, getIssueProjectDB } from "./issueProject.db.js";
+import { CreateIssueProjectSchemaType } from "./issueProject.types.js";
 
-export const createIssueProject = async (userId: string, name: string) => {
-  const result = await createIssueProjectDB(userId, name);
+export const createIssueProject = async (
+  userId: string,
+  data: CreateIssueProjectSchemaType,
+) => {
+  const result = await createIssueProjectDB({ ...data, userId });
 
   return result;
 };

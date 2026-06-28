@@ -23,7 +23,7 @@ export const createIssueProjectController = async (
   request: FastifyRequest<CreateIssueProjectRequest>,
   reply: FastifyReply,
 ) => {
-  const { name } = request.body;
+  const { name, backendFramework } = request.body;
 
   const { isAuthenticated, userId } = request.auth;
 
@@ -33,7 +33,9 @@ export const createIssueProjectController = async (
     });
   }
 
-  const result = await createIssueProject(userId, name);
+  const obj = { name, backendFramework };
+
+  const result = await createIssueProject(userId, obj);
 
   return reply.code(201).send(result);
 };
