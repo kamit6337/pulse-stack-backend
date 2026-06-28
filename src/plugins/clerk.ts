@@ -6,11 +6,10 @@ export default fp(async (fastify) => {
   fastify.register(clerkPlugin);
 
   fastify.decorate("authenticateClerk", async (request, reply) => {
-    const user = getAuth(request);
-
     console.log("CLERK_PUBLISHABLE_KEY", environment.CLERK_PUBLISHABLE_KEY);
     console.log("CLERK_SECRET_KEY", environment.CLERK_SECRET_KEY);
     console.log("COOKIES", request.headers);
+    const user = getAuth(request);
     console.log("USER", user);
 
     if (!user.isAuthenticated) {
