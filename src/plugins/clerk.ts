@@ -10,7 +10,7 @@ export default fp(async (fastify) => {
 
     console.log("CLERK_PUBLISHABLE_KEY", environment.CLERK_PUBLISHABLE_KEY);
     console.log("CLERK_SECRET_KEY", environment.CLERK_SECRET_KEY);
-    console.log("COOKIES", request.headers.cookie);
+    console.log("COOKIES", request.headers);
 
     if (!user.isAuthenticated) {
       return reply.code(401).send({
