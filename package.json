@@ -1,6 +1,6 @@
 {
   "name": "fastify-backend",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "This project was bootstrapped with Fastify-CLI.",
   "main": "app.ts",
   "type": "module",
