@@ -5,6 +5,8 @@ import app from "./app.js";
 const start = async () => {
   const fastify = Fastify({
     logger: environment.NODE_ENV === "development",
+    trustProxy: true,
+    bodyLimit: 1024 * 1024, // 1 MB
   });
 
   await fastify.register(app);

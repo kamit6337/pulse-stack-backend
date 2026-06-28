@@ -12,6 +12,7 @@ const envSchema = z.object({
   CLERK_SECRET_KEY: z.string().startsWith("sk_"),
   ENCRYPTION_KEY: z.string(),
   ENCRYPTION_EXPIRE_IN: z.coerce.number().optional(),
+  CLIENT_URL: z.url().optional(),
 });
 
 const environment = envSchema.parse(process.env);

@@ -7,11 +7,11 @@ export default fp(async (fastify) => {
   fastify.decorate("authenticateClerk", async (request, reply) => {
     const user = getAuth(request);
 
-    // if (!user.isAuthenticated) {
-    //   return reply.code(401).send({
-    //     message: "Unauthorized",
-    //   });
-    // }
+    if (!user.isAuthenticated) {
+      return reply.code(401).send({
+        message: "Unauthorized",
+      });
+    }
 
     request.auth = user;
   });
